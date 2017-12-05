@@ -25,8 +25,13 @@
 //        
 //    }];
     
-    AFHTTPSessionManager *httpSession = [AFHTTPSessionManager manager];
+    NSString *cerPath = [[NSBundle mainBundle]pathForResource:@"12306.cer" ofType:nil];
+    NSData *data = [NSData dataWithContentsOfFile:cerPath];
+    NSSet *set = [[NSSet alloc] initWithObjects:data, nil];
     
+    AFHTTPSessionManager *httpSession = [AFHTTPSessionManager manager];
+    httpSession.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate withPinnedCertificates:set];
+    httpSession.securityPolicy.allowInvalidCertificates = NO;
     httpSession.responseSerializer = [AFHTTPResponseSerializer serializer];
     
     httpSession.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"image/jpeg"];
